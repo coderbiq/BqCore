@@ -13,15 +13,17 @@ abstract class AbstractTable extends AbstractTableGateway
     }
 
     public function bootstrap() {
+        $eventManager = new EventManagerAware();
+
         $event = new Event();
         $event->setTarget($this);
-        $event->setName(__FUNCTION__);
-        $eventManager = new EventManagerAware();
+        $event->setName(Event::BOOTSTRAP);
+
         $eventManager->getEventManager()->trigger($event);
 
         $this->table = static::getTableName();
 
-        $event->setName(sprintf('%s.post', __FUNCTION__));
+        $event->setName(Event::BOOTSTRAP_POST);
         $eventManager->getEventManager()->trigger($event);
     }
 }
