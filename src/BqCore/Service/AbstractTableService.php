@@ -7,7 +7,7 @@ use BqCore\Db\Table\TableInterface;
 use BqCore\Entity\FactoryInterface as EntityFactoryInterface;
 
 abstract class AbstractTableService extends AbstractTableGateway
-    implements TableInterface, EntityFactoryInterface, TableServiceInterface
+    implements EntityFactoryInterface, TableServiceInterface
 {
     protected $serviceLocator;
 
