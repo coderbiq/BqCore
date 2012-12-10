@@ -3,8 +3,9 @@
 namespace BqCore;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
-class Module implements AutoloaderProviderInterface
+class Module implements AutoloaderProviderInterface, ServiceProviderInterface
 {
     public function getAutoloaderConfig()
     {
@@ -17,4 +18,12 @@ class Module implements AutoloaderProviderInterface
         );
     }
 
+    public function getServiceConfig() {
+        return array(
+            'factories' => array(
+                'BqCore\Data\EventManager' => 
+                    'BqCore\Service\DataEventManagerFactory',
+            ),
+        );
+    }
 }
