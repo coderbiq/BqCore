@@ -6,6 +6,7 @@ use Zend\Db\TableGateway\AbstractTableGateway;
 use BqCore\Db\Table\TableInterface;
 use BqCore\Entity\FactoryInterface as EntityFactoryInterface;
 use BqCore\Event\DataEvent;
+use BqCore\Entity\AbstractEntity;
 
 abstract class AbstractTableService extends AbstractTableGateway
     implements EntityFactoryInterface, TableServiceInterface
@@ -80,4 +81,9 @@ abstract class AbstractTableService extends AbstractTableGateway
         return $this;
     }
 
+    protected function parseEntity(AbstractEntity $entity) {
+        $entity->setEventManager($this->getServiceLocator()
+            ->get('BqCore\Data\EventManager'));
+        return $entity;
+    }
 }
