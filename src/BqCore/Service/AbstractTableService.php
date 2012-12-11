@@ -5,11 +5,38 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use BqCore\Db\Table\TableInterface;
 use BqCore\Entity\FactoryInterface as EntityFactoryInterface;
+use BqCore\Event\DataEvent;
 
 abstract class AbstractTableService extends AbstractTableGateway
     implements EntityFactoryInterface, TableServiceInterface
 {
     protected $serviceLocator;
+
+    public function search(Array $params=array()) {
+        $event = new DataEvent();
+        $event->setTarget($this)->setParams($params)
+            ->setName(DataEvent::EVENT_SEARCH);
+        $eventManager = $this->getServiceLocator()
+            ->get('BqCore\Data\EventManager');
+        $eventManager->trigger($event);
+
+        $resultSet = $this->select(function($select) use($params) {
+            if(isset($params['limit'])) {
+                $select->limit(intval($params['limit']));
+                unset($params['limit']);
+            }
+            if(isset($params['offset'])) {
+                $select->offset(intval($params['offset']));
+                unset($params['offset']);
+            }
+            $select->where($params);
+        });
+
+        $event->setResultSet($resultSet)->setName(DataEvent::EVENT_SEARCH_POST);
+        $eventManager->trigger($event);
+
+        return $resultSet;
+    }
 
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $this->setServiceLocator($serviceLocator);
