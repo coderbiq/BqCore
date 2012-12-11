@@ -38,6 +38,22 @@ abstract class AbstractTableService extends AbstractTableGateway
         return $resultSet;
     }
 
+    public function delete($where) {
+        $event = new DataEvent();
+        $event->setTarget($this)->setParams($where)
+            ->setName(DataEvent::EVENT_DELETE);
+        $eventManager = $this->getServiceLocator()
+            ->get('BqCore\Data\EventManager');
+        $eventManager->trigger($event);
+
+        $result = parent::delete($where);
+
+        $event->setName(DataEvent::EVENT_DELETE_POST);
+        $eventManager->trigger($event);
+
+        return $result;
+    }
+
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $this->setServiceLocator($serviceLocator);
 
