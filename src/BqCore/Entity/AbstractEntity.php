@@ -5,13 +5,41 @@ use Zend\Db\RowGateway\RowGateway;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use BqCore\Event\DataEvent;
+use BqCore\Event\EntityEvent;
 
 abstract class AbstractEntity extends RowGateway implements EntityInterface, 
     EventManagerAwareInterface
 {
     protected $eventManager;
+    protected $relyonEntitys = array();
 
     public function getId() { return $this->id; }
+
+    public function getRelyonEntity($entityName) {
+        if(isset($this->relyonEntitys[$entityName]))
+            return $this->relyonEntitys[$entityName];
+
+        $entityEvent = new EntityEvent();
+        $entityEvent->setTarget($this)->setRelyonEntityName($entityName)
+            ->setName(EntityEvent::EVENT_GET_RELYON_ENTITY);
+        $results = $this->getEventManager()->trigger($entityEvent, 
+            function($result) {
+                return ($result instanceof Relyon);
+        });
+
+        if($results->stopped()) {
+            $relyon = $results->last();
+            if($relyon instanceof Relyon) {
+                $this->setRelyonEntity($entityName, $relyon->getEntity());
+                return $relyon->getEntity();
+            }
+        }
+    }
+
+    public function setRelyonEntity($entityName, $entity) {
+        $this->relyonEntitys[$entityName] = $entity;
+        return $this;
+    }
 
     public function getEventManager() { return $this->eventManager; }
     public function setEventManager(EventManagerInterface $eventManager) {
