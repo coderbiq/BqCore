@@ -1,0 +1,26 @@
+<form <?php echo $this->form()->createAttributesString($form->getAttributes()); ?> class="form-horizontal">
+
+<?php $actions = array(); ?>
+<?php foreach($form->getElements() as $element): ?>
+    <?php if(in_array($element->getAttribute('type'), array('submit', 'hidden'))): ?>
+        <?php $actions[] = $element; ?>
+    <?php else: ?>
+<div class="control-group">
+  <label class="control-label"><?php echo $element->getOption('label'); ?></label>
+  <div class="controls">
+    <?php echo $this->formInput($element); ?>
+  </div>
+</div>
+    <?php endif; ?>
+<?php endforeach; ?>
+
+<div class="form-actions">
+<?php foreach($actions as $element): ?>
+    <?php if($element->getAttribute('type') == 'submit'): ?>
+<button <?php echo $this->form()->createAttributesString($element->getAttributes()); ?>><?php echo $form->get('register')->getOption('label'); ?></button>
+    <?php else: ?>
+<?php echo $this->formHidden($element); ?>
+    <?php endif; ?>
+<?php endforeach; ?>
+</div>
+<?php echo $this->form()->closeTag($form); ?>
