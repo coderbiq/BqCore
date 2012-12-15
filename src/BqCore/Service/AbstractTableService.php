@@ -92,7 +92,7 @@ abstract class AbstractTableService extends AbstractTableGateway
         return $this;
     }
 
-    protected function parseEntity(AbstractEntity $entity) {
+    protected function prepareEntity(AbstractEntity $entity) {
         $entity->setEventManager($this->getServiceLocator()
             ->get('BqCore\Data\EventManager'));
         $entity->setEntityName($this->getEntityName());
