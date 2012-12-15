@@ -12,8 +12,15 @@ abstract class AbstractEntity extends RowGateway implements EntityInterface,
 {
     protected $eventManager;
     protected $relyonEntities = array();
+    protected $entityName;
 
     public function getId() { return $this->id; }
+
+    public function getEntityName() { return $this->entityName; }
+    public function setEntityName($entityName) {
+        $this->entityName = $entityName;
+        return $this;
+    }
 
     public function getRelyonEntities($entityName, Array $ids=array(), 
         Array $params=array()) {
