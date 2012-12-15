@@ -1,13 +1,14 @@
 <?php
 namespace BqCore\Entity;
+use Zend\Db\ResultSet\ResultSet;
 
 class Relyon
 {
-    protected $entity;
+    protected $entities;
 
-    public function getEntity() { return $this->entity; }
-    public function setEntity(EntityInterface $entity) {
-        $this->entity = $entity;
+    public function getEntities() { return $this->entities; }
+    public function setEntities(ResultSet $entities) {
+        $this->entities = $entities;
         return $this;
     }
 }

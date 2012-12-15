@@ -4,14 +4,25 @@ namespace BqCore\Service;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use BqCore\Db\Table\TableInterface;
-use BqCore\Entity\FactoryInterface as EntityFactoryInterface;
+use BqCore\Entity\ManagerInterface as EntityManagerInterface;
 use BqCore\Event\DataEvent;
 use BqCore\Entity\AbstractEntity;
 
 abstract class AbstractTableService extends AbstractTableGateway
-    implements EntityFactoryInterface, TableServiceInterface
+    implements EntityManagerInterface, TableServiceInterface
 {
     protected $serviceLocator;
+
+    public function getEntities(Array $ids, Array $params=array()) {
+        $entities = $this->select(function($select) use($ids, $params) {
+            $select->where(array('id'=>$ids));
+            if(isset($params['limit']))
+                $select->limit(intval($params['limit']));
+            if(isset($params['offset']))
+                $select->offset(intval($params));
+        });
+        return $entities;
+    }
 
     public function search(Array $params=array()) {
         $event = new DataEvent();
