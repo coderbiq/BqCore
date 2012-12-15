@@ -2,6 +2,7 @@
 namespace BqCore\Event;
 
 use Zend\EventManager\Event;
+use BqCore\Entity\EntityInterface;
 
 class EntityEvent extends Event
 {
@@ -9,6 +10,7 @@ class EntityEvent extends Event
 
     protected $relyonEntityName;
     protected $relyonEntityIds;
+    protected $relyonEntity;
 
     public function getRelyonEntityName() { return $this->relyonEntityName; }
     public function setRelyonEntityName($name) {
@@ -19,6 +21,12 @@ class EntityEvent extends Event
     public function getRelyonEntityIds() { return $this->relyonEntityIds; }
     public function setRelyonEntityIds(Array $ids) {
         $this->relyonEntityIds = $ids;
+        return $this;
+    }
+
+    public function getRelyonEntity() { return $this->relyonEntity; }
+    public function setRelyonEntity(EntityInterface $entity) {
+        $this->relyonEntity = $entity;
         return $this;
     }
 }
