@@ -8,6 +8,14 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
 class Module implements AutoloaderProviderInterface, ServiceProviderInterface
 {
+    public function onBootstrap($event)
+    {
+        $serviceManager = $event->getApplication()->getServiceManager();
+        $dataEventManager = $serviceManager->get('BqCore\Data\EventManager');
+        $dataEventManager->attach(
+            $serviceManager->get('BqCore\Event\Listener\Relyon'));
+    }
+
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
@@ -29,6 +37,8 @@ class Module implements AutoloaderProviderInterface, ServiceProviderInterface
             'factories' => array(
                 'BqCore\Data\EventManager' => 
                     'BqCore\Service\DataEventManagerFactory',
+                'BqCore\Event\Listener\Relyon' 
+                    => 'BqCore\Event\Listener\Relyon',
             ),
         );
     }
