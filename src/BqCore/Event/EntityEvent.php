@@ -7,6 +7,7 @@ use BqCore\Entity\EntityInterface;
 class EntityEvent extends Event
 {
     const EVENT_GET_RELYON_ENTITIES = 'bqcore.entity.get.relyon.entities';
+    const EVENT_ADD_RELYON_ENTITY = 'bqcore.entity.add.relyon.entity';
 
     protected $relyonEntityName;
     protected $relyonEntityIds;
