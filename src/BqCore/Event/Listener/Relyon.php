@@ -18,30 +18,20 @@ class Relyon extends AbstractListener
 
     public function onGetRelyonEntities($event) {
         $entityName = $event->getRelyonEntityName();
+
         $entityIds = $event->getRelyonEntityIds();
         if(count($entityIds) < 1)
             return null;
-        if(!$entityService = $this->getEntityService($entityName))
+
+        $entityManagerAware = $this->getServiceLocator()
+            ->get('BqCore\EntityManagerAware')
+            ->getEntityManager($entityName);
+        if(!$entityService)
             return null;
+
         $params = $event->getParams();
-
         $entities = $entityService->getEntities($entityIds, $params);
+
         return new RelyonResult($entities);
-    }
-
-    protected function getEntityService($entityName) {
-        $config = $this->getServiceManager()->get('Configuration');
-        if(!isset($config['entities'][$entityName]['service']))
-            return false;
-
-        $serviceName = $config['entities'][$entityName]['service'];
-        if(!$this->getServiceLocator()->has($serviceName))
-            return false;
-
-        $service = $this->getServiceLocator()->get($serviceName);
-        if(!$service instanceof EntityManagerInterface)
-            return false;
-
-        return $service;
     }
 }
