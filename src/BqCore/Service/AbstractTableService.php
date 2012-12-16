@@ -3,6 +3,7 @@ namespace BqCore\Service;
 
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\AbstractTableGateway;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use BqCore\Db\Table\TableInterface;
 use BqCore\Entity\ManagerInterface as EntityManagerInterface;
 use BqCore\Event\DataEvent;
